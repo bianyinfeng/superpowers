@@ -526,7 +526,8 @@ group('Statistics: Mean', () => {
   const engine = new WP34Engine();
   engine.clearStatistics();
 
-  // Enter data: 10, 20, 30
+  // Enter (Y=0, X=10), (Y=0, X=20), (Y=0, X=30) pairs via Σ+
+  // Σ+ accumulates X values into R1 (Σx) and Y values into R3 (Σy)
   engine.digit(0); engine.enter();
   engine.digit(1); engine.digit(0);
   engine.sigmaPlus();
@@ -541,7 +542,7 @@ group('Statistics: Mean', () => {
 
   assertEqual(engine.registers[0], 3, 'n = 3');
   engine.mean();
-  assertClose(engine.stack.x, 20, 'Mean of 10, 20, 30 = 20');
+  assertClose(engine.stack.x, 20, 'Mean x of (10, 20, 30) = 20');
 });
 
 // --- Coordinate Conversion ---

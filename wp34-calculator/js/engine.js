@@ -515,9 +515,9 @@ class WP34Engine {
 
   factorial() {
     return this._unaryOp(x => {
-      if (x < 0 || x !== Math.floor(x) || x > 170) {
-        if (x < 0) return NaN;
-        if (x > 170) return Infinity;
+      if (x < 0) return NaN;
+      if (x > 170) return Infinity;
+      if (x !== Math.floor(x)) {
         // Gamma function for non-integers: x! = Gamma(x+1)
         return this._gamma(x + 1);
       }
