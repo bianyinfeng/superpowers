@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WP-34S Scientific Calculator</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="calculator">
+    <!-- Header -->
+    <div class="calc-header">
+      <div class="brand">Scientific Calculator</div>
+      <div class="model">WP 34S</div>
+    </div>
+
+    <!-- Display -->
+    <div class="display-container">
+      <div class="display-status">
+        <div class="mode-indicators">
+          <span id="mode-angle" class="mode-indicator active">DEG</span>
+          <span id="mode-display" class="mode-indicator">FIX 4</span>
+          <span id="memory-indicator" class="mode-indicator"></span>
+        </div>
+        <span id="shift-indicator" class="shift-indicator"></span>
+      </div>
+      <div class="display-stack">
+        <div class="stack-row">
+          <span class="stack-label">T:</span>
+          <span id="stack-t" class="stack-value">0.0000</span>
+        </div>
+        <div class="stack-row">
+          <span class="stack-label">Z:</span>
+          <span id="stack-z" class="stack-value">0.0000</span>
+        </div>
+        <div class="stack-row">
+          <span class="stack-label">Y:</span>
+          <span id="stack-y" class="stack-value">0.0000</span>
+        </div>
+      </div>
+      <div id="display-main" class="display-main">0.0000</div>
+    </div>
+
+    <!-- Function Keys Row 1 -->
+    <div class="button-section">
+      <div class="button-grid">
+        <button class="calc-btn btn-blue" data-action="sqrt">
+          <span class="f-label">x²</span>
+          <span class="btn-label">√x</span>
+          <span class="g-label">³√x</span>
+        </button>
+        <button class="calc-btn btn-blue" data-action="power">
+          <span class="f-label">ˣ√y</span>
+          <span class="btn-label">yˣ</span>
+        </button>
+        <button class="calc-btn btn-blue" data-action="reciprocal">
+          <span class="f-label">|x|</span>
+          <span class="btn-label">1/x</span>
+        </button>
+        <button class="calc-btn btn-blue" data-action="percent">
+          <span class="f-label">Δ%</span>
+          <span class="btn-label">%</span>
+        </button>
+        <button class="calc-btn btn-blue" data-action="factorial">
+          <span class="f-label">C(n,r)</span>
+          <span class="btn-label">n!</span>
+          <span class="g-label">P(n,r)</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- Function Keys Row 2 -->
+    <div class="button-section">
+      <div class="button-grid">
+        <button class="calc-btn btn-blue" data-action="sin">
+          <span class="f-label">sin⁻¹</span>
+          <span class="btn-label">SIN</span>
+          <span class="g-label">sinh</span>
+        </button>
+        <button class="calc-btn btn-blue" data-action="cos">
+          <span class="f-label">cos⁻¹</span>
+          <span class="btn-label">COS</span>
+          <span class="g-label">cosh</span>
+        </button>
+        <button class="calc-btn btn-blue" data-action="tan">
+          <span class="f-label">tan⁻¹</span>
+          <span class="btn-label">TAN</span>
+          <span class="g-label">tanh</span>
+        </button>
+        <button class="calc-btn btn-blue" data-action="ln">
+          <span class="f-label">eˣ</span>
+          <span class="btn-label">LN</span>
+        </button>
+        <button class="calc-btn btn-blue" data-action="log">
+          <span class="f-label">10ˣ</span>
+          <span class="btn-label">LOG</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- Shift & Control Row -->
+    <div class="button-section">
+      <div class="button-grid">
+        <button class="calc-btn btn-yellow" data-action="f-shift">
+          <span class="btn-label">f</span>
+        </button>
+        <button class="calc-btn btn-blue" data-action="g-shift" style="background: var(--text-shift-g);">
+          <span class="btn-label">g</span>
+        </button>
+        <button class="calc-btn" data-action="sto">
+          <span class="f-label">STO+</span>
+          <span class="btn-label">STO</span>
+          <span class="g-label">STO−</span>
+        </button>
+        <button class="calc-btn" data-action="rcl">
+          <span class="btn-label">RCL</span>
+        </button>
+        <button class="calc-btn" data-action="angle-mode">
+          <span class="f-label">→R</span>
+          <span class="btn-label">MODE</span>
+          <span class="g-label">→P</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- Stack & Statistics Row -->
+    <div class="button-section">
+      <div class="button-grid">
+        <button class="calc-btn" data-action="swap">
+          <span class="btn-label">x⇄y</span>
+        </button>
+        <button class="calc-btn" data-action="roll-down">
+          <span class="g-label">R↑</span>
+          <span class="btn-label">R↓</span>
+        </button>
+        <button class="calc-btn" data-action="lastx">
+          <span class="btn-label">LASTx</span>
+        </button>
+        <button class="calc-btn" data-action="sigma-plus">
+          <span class="f-label">Σ−</span>
+          <span class="btn-label">Σ+</span>
+        </button>
+        <button class="calc-btn" data-action="mean">
+          <span class="f-label">s</span>
+          <span class="btn-label">x̄</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- Number Pad & Operations -->
+    <div class="button-section">
+      <div class="button-grid" style="grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(4, 44px);">
+        <!-- Row 1: 7 8 9 ÷ ENTER -->
+        <button class="calc-btn btn-white" data-action="7">
+          <span class="btn-label">7</span>
+        </button>
+        <button class="calc-btn btn-white" data-action="8">
+          <span class="btn-label">8</span>
+        </button>
+        <button class="calc-btn btn-white" data-action="9">
+          <span class="btn-label">9</span>
+        </button>
+        <button class="calc-btn btn-blue" data-action="divide">
+          <span class="f-label">MOD</span>
+          <span class="btn-label">÷</span>
+        </button>
+        <button class="calc-btn btn-enter" data-action="enter" style="grid-row: span 2;">
+          <span class="btn-label">ENTER</span>
+        </button>
+
+        <!-- Row 2: 4 5 6 × -->
+        <button class="calc-btn btn-white" data-action="4">
+          <span class="btn-label">4</span>
+        </button>
+        <button class="calc-btn btn-white" data-action="5">
+          <span class="btn-label">5</span>
+        </button>
+        <button class="calc-btn btn-white" data-action="6">
+          <span class="btn-label">6</span>
+        </button>
+        <button class="calc-btn btn-blue" data-action="multiply">
+          <span class="btn-label">×</span>
+        </button>
+
+        <!-- Row 3: 1 2 3 − π -->
+        <button class="calc-btn btn-white" data-action="1">
+          <span class="btn-label">1</span>
+        </button>
+        <button class="calc-btn btn-white" data-action="2">
+          <span class="btn-label">2</span>
+        </button>
+        <button class="calc-btn btn-white" data-action="3">
+          <span class="btn-label">3</span>
+        </button>
+        <button class="calc-btn btn-blue" data-action="subtract">
+          <span class="btn-label">−</span>
+        </button>
+        <button class="calc-btn" data-action="pi">
+          <span class="btn-label">π</span>
+        </button>
+
+        <!-- Row 4: 0 . CHS EEX + -->
+        <button class="calc-btn btn-white" data-action="0">
+          <span class="btn-label">0</span>
+        </button>
+        <button class="calc-btn btn-white" data-action="decimal">
+          <span class="btn-label">.</span>
+        </button>
+        <button class="calc-btn" data-action="chs">
+          <span class="btn-label">+/−</span>
+        </button>
+        <button class="calc-btn" data-action="backspace">
+          <span class="f-label">CLR</span>
+          <span class="btn-label">⌫</span>
+        </button>
+        <button class="calc-btn btn-blue" data-action="add">
+          <span class="btn-label">+</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Clear Row -->
+    <div style="padding: 6px 4px 0;">
+      <div style="display: flex; gap: 6px;">
+        <button class="calc-btn" data-action="clx" style="flex:1; height: 36px;">
+          <span class="f-label">CLR ALL</span>
+          <span class="btn-label">CLx</span>
+        </button>
+        <button class="calc-btn" data-action="eex" style="flex:1; height: 36px;">
+          <span class="btn-label">EEX</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="calc-footer">
+      WP-34S Scientific RPN Calculator
+    </div>
+  </div>
+
+  <script src="js/engine.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
