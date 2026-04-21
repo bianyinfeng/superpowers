@@ -162,6 +162,18 @@ Skills live directly in this repository. To contribute:
 
 See `skills/writing-skills/SKILL.md` for the complete guide.
 
+## ANTLR Grammar Tree Tool
+
+For debugging/modifying ANTLR grammars, this repository now includes a small Python utility:
+
+```bash
+python3 tools/antlr_grammar_tree.py /path/to/grammars --mode both --plan
+```
+
+- Scans `.g4` and `.g` files
+- Shows file tree and grammar dependency tree
+- Classifies lexer/parser/combined grammars
+
 ## Updating
 
 Skills update automatically when you update the plugin:
