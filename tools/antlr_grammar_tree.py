@@ -50,10 +50,7 @@ def parse_grammar_file(path: Path, root: Path) -> GrammarFile:
         dependencies.extend([item for item in imports if item])
     dependencies.extend(TOKEN_VOCAB_RE.findall(text))
 
-    deduped_dependencies: list[str] = []
-    for dep in dependencies:
-        if dep not in deduped_dependencies:
-            deduped_dependencies.append(dep)
+    deduped_dependencies = list(dict.fromkeys(dependencies))
 
     return GrammarFile(
         path=path,
@@ -107,8 +104,9 @@ def render_file_tree(root: Path, grammars: list[GrammarFile]) -> str:
         index = 0
         for child_dir in child_dirs:
             is_last = index == total - 1
-            lines.append(_print_tree_node(child_dir.name, prefix, is_last and not child_files))
-            walk_dir(child_dir, prefix + ("    " if is_last and not child_files else "│   "))
+            is_terminal_dir = is_last and not child_files
+            lines.append(_print_tree_node(child_dir.name, prefix, is_terminal_dir))
+            walk_dir(child_dir, prefix + ("    " if is_terminal_dir else "│   "))
             index += 1
 
         for file_index, grammar in enumerate(child_files):
@@ -139,13 +137,18 @@ def render_dependency_tree(grammars: list[GrammarFile]) -> str:
         roots = sorted(grammars, key=lambda item: item.grammar_name.lower())
 
     lines: list[str] = []
+    expanded: set[str] = set()
 
     def walk(grammar: GrammarFile, prefix: str, active_path: set[str]) -> None:
         if grammar.grammar_name in active_path:
             lines.append(f"{prefix}↳ {grammar.grammar_name} (cycle)")
             return
+        if grammar.grammar_name in expanded:
+            lines.append(f"{prefix}↳ {grammar.grammar_name} (already shown)")
+            return
 
         active_path.add(grammar.grammar_name)
+        expanded.add(grammar.grammar_name)
         known_children = [dep for dep in grammar.dependencies if dep in by_name]
         missing_children = [dep for dep in grammar.dependencies if dep not in by_name]
         children = known_children + missing_children

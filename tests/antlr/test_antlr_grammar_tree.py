@@ -44,6 +44,18 @@ class AntlrGrammarTreeTests(unittest.TestCase):
             self.assertIn("A [combined]", output)
             self.assertIn("B [missing]", output)
 
+    def test_dependency_tree_marks_already_shown_subtrees(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            root = Path(tmp_dir)
+            (root / "A.g4").write_text("grammar A;\nimport C;\n", encoding="utf-8")
+            (root / "B.g4").write_text("grammar B;\nimport C;\n", encoding="utf-8")
+            (root / "C.g4").write_text("grammar C;\n", encoding="utf-8")
+
+            grammars = MODULE.scan_grammar_files(root)
+            output = MODULE.render_dependency_tree(grammars)
+
+            self.assertIn("↳ C (already shown)", output)
+
 
 if __name__ == "__main__":
     unittest.main()
