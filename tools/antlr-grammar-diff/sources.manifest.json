@@ -1,0 +1,90 @@
+{
+  "sources": [
+    {
+      "engine": "spark",
+      "repo_url": "https://github.com/apache/spark.git",
+      "license": "Apache-2.0",
+      "refs": {
+        "branch_latest": "master",
+        "tag_fixed": "v4.0.1"
+      },
+      "grammars": [
+        {
+          "path": "sql/api/src/main/antlr4/org/apache/spark/sql/catalyst/parser/SqlBaseLexer.g4",
+          "type": "lexer"
+        },
+        {
+          "path": "sql/api/src/main/antlr4/org/apache/spark/sql/catalyst/parser/SqlBaseParser.g4",
+          "type": "parser"
+        }
+      ]
+    },
+    {
+      "engine": "hive",
+      "repo_url": "https://github.com/apache/hive.git",
+      "license": "Apache-2.0",
+      "refs": {
+        "branch_latest": "master",
+        "tag_fixed": "rel/release-4.0.0"
+      },
+      "grammars": [
+        {
+          "path": "parser/src/java/org/apache/hadoop/hive/ql/parse/HiveLexer.g",
+          "type": "lexer"
+        },
+        {
+          "path": "parser/src/java/org/apache/hadoop/hive/ql/parse/HiveParser.g",
+          "type": "parser"
+        }
+      ]
+    },
+    {
+      "engine": "doris",
+      "repo_url": "https://github.com/apache/doris.git",
+      "license": "Apache-2.0",
+      "refs": {
+        "branch_latest": "master"
+      },
+      "grammars": [
+        {
+          "path": "fe/fe-core/src/main/antlr4/org/apache/doris/nereids/DorisLexer.g4",
+          "type": "lexer"
+        },
+        {
+          "path": "fe/fe-core/src/main/antlr4/org/apache/doris/nereids/DorisParser.g4",
+          "type": "parser"
+        }
+      ]
+    },
+    {
+      "engine": "trino",
+      "repo_url": "https://github.com/trinodb/trino.git",
+      "license": "Apache-2.0",
+      "refs": {
+        "branch_latest": "master",
+        "tag_fixed": "477"
+      },
+      "grammars": [
+        {
+          "path": "core/trino-grammar/src/main/antlr4/io/trino/grammar/sql/SqlBase.g4",
+          "type": "parser"
+        }
+      ]
+    },
+    {
+      "engine": "presto",
+      "repo_url": "https://github.com/prestodb/presto.git",
+      "license": "Apache-2.0",
+      "refs": {
+        "branch_latest": "master",
+        "tag_fixed": "0.291"
+      },
+      "grammars": [
+        {
+          "path": "presto-parser/src/main/antlr4/com/facebook/presto/sql/parser/SqlBase.g4",
+          "type": "parser"
+        }
+      ]
+    }
+  ]
+}

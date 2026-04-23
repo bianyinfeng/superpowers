@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ANTLR Grammar Diff Visualizer</title>
+  <script src="https://unpkg.com/cytoscape@3.30.2/dist/cytoscape.min.js"></script>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; padding: 1rem; background: #fafafa; }
+    h1 { margin-top: 0; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .panel { background: white; border: 1px solid #ddd; border-radius: 8px; padding: 1rem; }
+    .row { display: flex; gap: .5rem; align-items: center; margin-bottom: .5rem; }
+    input, select, button { padding: .45rem .6rem; font-size: 14px; }
+    button { cursor: pointer; }
+    #diffText { white-space: pre; overflow: auto; background: #111; color: #ddd; padding: .5rem; height: 280px; }
+    #summary { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    #cy { width: 100%; height: 420px; border: 1px solid #ddd; border-radius: 6px; }
+    .full { grid-column: 1 / -1; }
+  </style>
+</head>
+<body>
+  <h1>ANTLR Grammar Diff Visualizer</h1>
+
+  <div class="panel">
+    <div class="row">
+      <button id="syncBtn">同步 grammar（manifest）</button>
+      <select id="mode">
+        <option value="branch_latest">branch_latest</option>
+        <option value="tag_fixed">tag_fixed</option>
+      </select>
+      <button id="refreshBtn">刷新文件列表</button>
+    </div>
+    <div class="row">
+      <label for="fileA">A:</label>
+      <select id="fileA" style="min-width: 45%;"></select>
+    </div>
+    <div class="row">
+      <label for="fileB">B:</label>
+      <select id="fileB" style="min-width: 45%;"></select>
+      <button id="diffBtn">执行对比</button>
+    </div>
+  </div>
+
+  <div class="grid" style="margin-top: 1rem;">
+    <div class="panel">
+      <h3>摘要</h3>
+      <pre id="summary"></pre>
+    </div>
+    <div class="panel">
+      <h3>规则变化</h3>
+      <pre id="rules"></pre>
+    </div>
+    <div class="panel full">
+      <h3>文本差异（统一 diff）</h3>
+      <div id="diffText"></div>
+    </div>
+    <div class="panel full">
+      <h3>结构差异子图</h3>
+      <div id="cy"></div>
+    </div>
+  </div>
+
+  <script>
+    const fileA = document.getElementById('fileA');
+    const fileB = document.getElementById('fileB');
+
+    async function refreshFiles() {
+      const res = await fetch('/api/archive-files');
+      const data = await res.json();
+      const options = data.files.map(f => `<option value="${f}">${f}</option>`).join('');
+      fileA.innerHTML = options;
+      fileB.innerHTML = options;
+      if (data.files.length > 1) {
+        fileA.selectedIndex = 0;
+        fileB.selectedIndex = 1;
+      }
+    }
+
+    async function syncManifest() {
+      const mode = document.getElementById('mode').value;
+      const res = await fetch('/api/sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mode })
+      });
+      const data = await res.json();
+      alert(`同步完成: ${data.sources?.length ?? 0} 个源`);
+      await refreshFiles();
+    }
+
+    function renderGraph(graph) {
+      const elements = [
+        ...(graph.nodes || []).map(n => ({
+          data: { id: n.id, changed: n.changed },
+          classes: n.changed ? 'changed' : ''
+        })),
+        ...(graph.edges || []).map(e => ({ data: { id: `${e.source}->${e.target}`, source: e.source, target: e.target } }))
+      ];
+
+      cytoscape({
+        container: document.getElementById('cy'),
+        elements,
+        style: [
+          { selector: 'node', style: { 'label': 'data(id)', 'font-size': 10, 'background-color': '#7aa2f7', 'text-wrap': 'wrap', 'text-max-width': 120 } },
+          { selector: 'node.changed', style: { 'background-color': '#f7768e' } },
+          { selector: 'edge', style: { 'width': 1.5, 'line-color': '#666', 'target-arrow-color': '#666', 'target-arrow-shape': 'triangle' } }
+        ],
+        layout: { name: 'cose', animate: false }
+      });
+    }
+
+    async function runDiff() {
+      const res = await fetch('/api/diff', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ file_a: fileA.value, file_b: fileB.value, max_text_diff_lines: 400 })
+      });
+      const data = await res.json();
+      document.getElementById('summary').textContent = JSON.stringify(data.summary, null, 2);
+      document.getElementById('rules').textContent = JSON.stringify({
+        added: data.rules.added,
+        removed: data.rules.removed,
+        changed: data.rules.changed,
+        rename_candidates: data.rules.rename_candidates
+      }, null, 2);
+      document.getElementById('diffText').textContent = (data.text_diff || []).join('\n');
+      renderGraph(data.structure.changed_subgraph || {nodes: [], edges: []});
+    }
+
+    document.getElementById('refreshBtn').addEventListener('click', refreshFiles);
+    document.getElementById('syncBtn').addEventListener('click', syncManifest);
+    document.getElementById('diffBtn').addEventListener('click', runDiff);
+
+    refreshFiles();
+  </script>
+</body>
+</html>
