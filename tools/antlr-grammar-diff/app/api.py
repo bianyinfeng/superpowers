@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any, Dict, List
 
 from fastapi import FastAPI, HTTPException
@@ -21,12 +21,19 @@ app = FastAPI(title="ANTLR Grammar Diff Visualizer", version="0.1.0")
 app.mount("/static", StaticFiles(directory=str(APP_STATIC_DIR)), name="static")
 
 
-def _resolve_under_archive(path: str) -> Path:
-    resolved = Path(path).expanduser().resolve()
+def _resolve_archive_file(relative_path: str) -> Path:
+    rel = PurePosixPath(relative_path)
+    if rel.is_absolute() or ".." in rel.parts:
+        raise HTTPException(status_code=400, detail="Invalid archive file path")
+
+    resolved = (DEFAULT_ARCHIVE_DIR / rel).resolve()
     try:
         resolved.relative_to(DEFAULT_ARCHIVE_DIR.resolve())
     except ValueError as exc:
         raise HTTPException(status_code=400, detail="Path must be under archive directory") from exc
+
+    if resolved.suffix not in {".g4", ".g"}:
+        raise HTTPException(status_code=400, detail="Only .g4/.g files are supported")
     return resolved
 
 
@@ -55,7 +62,7 @@ def archive_files() -> Dict[str, List[str]]:
     root = DEFAULT_ARCHIVE_DIR.resolve()
     if not root.exists():
         return {"files": []}
-    files = [str(path.resolve()) for path in root.rglob("*") if path.suffix in {".g4", ".g"}]
+    files = [str(path.resolve().relative_to(root)) for path in root.rglob("*") if path.suffix in {".g4", ".g"}]
     return {"files": sorted(files)}
 
 
@@ -74,8 +81,8 @@ def sync(req: SyncRequest) -> Dict[str, Any]:
 
 @app.post("/api/diff")
 def diff(req: DiffRequest) -> Dict[str, Any]:
-    path_a = _resolve_under_archive(req.file_a)
-    path_b = _resolve_under_archive(req.file_b)
+    path_a = _resolve_archive_file(req.file_a)
+    path_b = _resolve_archive_file(req.file_b)
     if not path_a.is_file() or not path_b.is_file():
         raise HTTPException(status_code=400, detail="Both file_a and file_b must exist")
 
