@@ -15,15 +15,22 @@ BASE_DIR = Path(__file__).resolve().parents[1]
 DEFAULT_MANIFEST = BASE_DIR / "sources.manifest.json"
 DEFAULT_ARCHIVE_DIR = BASE_DIR / "data" / "archive"
 DEFAULT_REPOS_DIR = BASE_DIR / "data" / "repos"
+APP_STATIC_DIR = BASE_DIR / "app" / "static"
 
 app = FastAPI(title="ANTLR Grammar Diff Visualizer", version="0.1.0")
-app.mount("/static", StaticFiles(directory=str(BASE_DIR / "app" / "static")), name="static")
+app.mount("/static", StaticFiles(directory=str(APP_STATIC_DIR)), name="static")
+
+
+def _resolve_under_archive(path: str) -> Path:
+    resolved = Path(path).expanduser().resolve()
+    try:
+        resolved.relative_to(DEFAULT_ARCHIVE_DIR.resolve())
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail="Path must be under archive directory") from exc
+    return resolved
 
 
 class SyncRequest(BaseModel):
-    manifest_path: str = Field(default=str(DEFAULT_MANIFEST.resolve()))
-    archive_dir: str = Field(default=str(DEFAULT_ARCHIVE_DIR.resolve()))
-    repos_cache_dir: str = Field(default=str(DEFAULT_REPOS_DIR.resolve()))
     mode: str = Field(default="branch_latest")
 
 
@@ -35,7 +42,7 @@ class DiffRequest(BaseModel):
 
 @app.get("/")
 def index() -> FileResponse:
-    return FileResponse(str(BASE_DIR / "app" / "static" / "index.html"))
+    return FileResponse(str(APP_STATIC_DIR / "index.html"))
 
 
 @app.get("/api/health")
@@ -44,8 +51,8 @@ def health() -> Dict[str, Any]:
 
 
 @app.get("/api/archive-files")
-def archive_files(archive_dir: str = str(DEFAULT_ARCHIVE_DIR.resolve())) -> Dict[str, List[str]]:
-    root = Path(archive_dir)
+def archive_files() -> Dict[str, List[str]]:
+    root = DEFAULT_ARCHIVE_DIR.resolve()
     if not root.exists():
         return {"files": []}
     files = [str(path.resolve()) for path in root.rglob("*") if path.suffix in {".g4", ".g"}]
@@ -56,9 +63,9 @@ def archive_files(archive_dir: str = str(DEFAULT_ARCHIVE_DIR.resolve())) -> Dict
 def sync(req: SyncRequest) -> Dict[str, Any]:
     try:
         return sync_from_manifest(
-            manifest_path=req.manifest_path,
-            archive_dir=req.archive_dir,
-            repos_cache_dir=req.repos_cache_dir,
+            manifest_path=str(DEFAULT_MANIFEST.resolve()),
+            archive_dir=str(DEFAULT_ARCHIVE_DIR.resolve()),
+            repos_cache_dir=str(DEFAULT_REPOS_DIR.resolve()),
             mode=req.mode,
         )
     except Exception as exc:  # pragma: no cover
@@ -67,8 +74,8 @@ def sync(req: SyncRequest) -> Dict[str, Any]:
 
 @app.post("/api/diff")
 def diff(req: DiffRequest) -> Dict[str, Any]:
-    path_a = Path(req.file_a)
-    path_b = Path(req.file_b)
+    path_a = _resolve_under_archive(req.file_a)
+    path_b = _resolve_under_archive(req.file_b)
     if not path_a.is_file() or not path_b.is_file():
         raise HTTPException(status_code=400, detail="Both file_a and file_b must exist")
 

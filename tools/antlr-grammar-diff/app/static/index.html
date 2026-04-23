@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -24,12 +24,12 @@
 
   <div class="panel">
     <div class="row">
-      <button id="syncBtn">同步 grammar（manifest）</button>
+      <button id="syncBtn">Sync grammars (manifest)</button>
       <select id="mode">
         <option value="branch_latest">branch_latest</option>
         <option value="tag_fixed">tag_fixed</option>
       </select>
-      <button id="refreshBtn">刷新文件列表</button>
+      <button id="refreshBtn">Refresh file list</button>
     </div>
     <div class="row">
       <label for="fileA">A:</label>
@@ -38,25 +38,25 @@
     <div class="row">
       <label for="fileB">B:</label>
       <select id="fileB" style="min-width: 45%;"></select>
-      <button id="diffBtn">执行对比</button>
+      <button id="diffBtn">Run diff</button>
     </div>
   </div>
 
   <div class="grid" style="margin-top: 1rem;">
     <div class="panel">
-      <h3>摘要</h3>
+      <h3>Summary</h3>
       <pre id="summary"></pre>
     </div>
     <div class="panel">
-      <h3>规则变化</h3>
+      <h3>Rule changes</h3>
       <pre id="rules"></pre>
     </div>
     <div class="panel full">
-      <h3>文本差异（统一 diff）</h3>
+      <h3>Text diff (unified)</h3>
       <div id="diffText"></div>
     </div>
     <div class="panel full">
-      <h3>结构差异子图</h3>
+      <h3>Structural diff subgraph</h3>
       <div id="cy"></div>
     </div>
   </div>
@@ -85,7 +85,7 @@
         body: JSON.stringify({ mode })
       });
       const data = await res.json();
-      alert(`同步完成: ${data.sources?.length ?? 0} 个源`);
+      alert(`Sync completed: ${data.sources?.length ?? 0} sources`);
       await refreshFiles();
     }
 
