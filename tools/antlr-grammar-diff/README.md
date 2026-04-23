@@ -19,7 +19,7 @@
 ## 安装
 
 ```bash
-cd /home/runner/work/superpowers/superpowers/tools/antlr-grammar-diff
+cd tools/antlr-grammar-diff
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -29,7 +29,7 @@ pip install -r requirements.txt
 
 ```bash
 python -m app.cli sync \
-  --manifest /home/runner/work/superpowers/superpowers/tools/antlr-grammar-diff/sources.manifest.json \
+  --manifest ./sources.manifest.json \
   --mode branch_latest
 ```
 
@@ -37,7 +37,7 @@ python -m app.cli sync \
 
 ```bash
 python -m app.cli sync \
-  --manifest /home/runner/work/superpowers/superpowers/tools/antlr-grammar-diff/sources.manifest.json \
+  --manifest ./sources.manifest.json \
   --mode tag_fixed
 ```
 

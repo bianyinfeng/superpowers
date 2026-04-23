@@ -16,7 +16,10 @@ class FetchError(RuntimeError):
 
 
 BASE_DIR = Path(__file__).resolve().parents[1]
-SAFE_REPO_URL = re.compile(r"^https://github\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+(?:\.git)?$")
+SAFE_REPO_URL = re.compile(
+    r"^https://github\.com/[A-Za-z0-9_]([A-Za-z0-9_.-]*[A-Za-z0-9_])?/"
+    r"[A-Za-z0-9_]([A-Za-z0-9_.-]*[A-Za-z0-9_])?(?:\.git)?$"
+)
 SAFE_REF = re.compile(r"^[A-Za-z0-9._/-]+$")
 SAFE_NAME = re.compile(r"^[A-Za-z0-9_.-]+$")
 

@@ -68,7 +68,7 @@
     async function refreshFiles() {
       const res = await fetch('/api/archive-files');
       const data = await res.json();
-      const options = data.files.map(f => `<option value="${f}">${f}</option>`).join('');
+      const options = data.files.map(f => `<option value="${f.id}">${f.path}</option>`).join('');
       fileA.innerHTML = options;
       fileB.innerHTML = options;
       if (data.files.length > 1) {
@@ -114,7 +114,7 @@
       const res = await fetch('/api/diff', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ file_a: fileA.value, file_b: fileB.value, max_text_diff_lines: 400 })
+        body: JSON.stringify({ file_a_id: Number(fileA.value), file_b_id: Number(fileB.value), max_text_diff_lines: 400 })
       });
       const data = await res.json();
       document.getElementById('summary').textContent = JSON.stringify(data.summary, null, 2);

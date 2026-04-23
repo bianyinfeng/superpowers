@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 from typing import Any, Dict, List
 
 from fastapi import FastAPI, HTTPException
@@ -21,20 +21,11 @@ app = FastAPI(title="ANTLR Grammar Diff Visualizer", version="0.1.0")
 app.mount("/static", StaticFiles(directory=str(APP_STATIC_DIR)), name="static")
 
 
-def _resolve_archive_file(relative_path: str) -> Path:
-    rel = PurePosixPath(relative_path)
-    if rel.is_absolute() or ".." in rel.parts:
-        raise HTTPException(status_code=400, detail="Invalid archive file path")
-
-    resolved = (DEFAULT_ARCHIVE_DIR / rel).resolve()
-    try:
-        resolved.relative_to(DEFAULT_ARCHIVE_DIR.resolve())
-    except ValueError as exc:
-        raise HTTPException(status_code=400, detail="Path must be under archive directory") from exc
-
-    if resolved.suffix not in {".g4", ".g"}:
-        raise HTTPException(status_code=400, detail="Only .g4/.g files are supported")
-    return resolved
+def _list_archive_file_paths() -> List[Path]:
+    root = DEFAULT_ARCHIVE_DIR.resolve()
+    if not root.exists():
+        return []
+    return sorted(path.resolve() for path in root.rglob("*") if path.suffix in {".g4", ".g"})
 
 
 class SyncRequest(BaseModel):
@@ -42,8 +33,8 @@ class SyncRequest(BaseModel):
 
 
 class DiffRequest(BaseModel):
-    file_a: str
-    file_b: str
+    file_a_id: int = Field(ge=0)
+    file_b_id: int = Field(ge=0)
     max_text_diff_lines: int = Field(default=400, ge=1, le=5000)
 
 
@@ -58,12 +49,13 @@ def health() -> Dict[str, Any]:
 
 
 @app.get("/api/archive-files")
-def archive_files() -> Dict[str, List[str]]:
+def archive_files() -> Dict[str, Any]:
     root = DEFAULT_ARCHIVE_DIR.resolve()
-    if not root.exists():
-        return {"files": []}
-    files = [str(path.resolve().relative_to(root)) for path in root.rglob("*") if path.suffix in {".g4", ".g"}]
-    return {"files": sorted(files)}
+    files = [
+        {"id": idx, "path": str(path.relative_to(root))}
+        for idx, path in enumerate(_list_archive_file_paths())
+    ]
+    return {"files": files}
 
 
 @app.post("/api/sync")
@@ -81,8 +73,12 @@ def sync(req: SyncRequest) -> Dict[str, Any]:
 
 @app.post("/api/diff")
 def diff(req: DiffRequest) -> Dict[str, Any]:
-    path_a = _resolve_archive_file(req.file_a)
-    path_b = _resolve_archive_file(req.file_b)
+    files = _list_archive_file_paths()
+    if req.file_a_id >= len(files) or req.file_b_id >= len(files):
+        raise HTTPException(status_code=400, detail="Invalid file id")
+
+    path_a = files[req.file_a_id]
+    path_b = files[req.file_b_id]
     if not path_a.is_file() or not path_b.is_file():
         raise HTTPException(status_code=400, detail="Both file_a and file_b must exist")
 
