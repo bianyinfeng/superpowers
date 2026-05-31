@@ -31,7 +31,9 @@ class DecompositionResult:
     reasoning: str = ""
 
 
-DECOMPOSE_SYSTEM_PROMPT = """You are a task decomposition expert. Given a complex task, break it down into atomic subtasks that can each be completed in a single AI API call.
+DECOMPOSE_SYSTEM_PROMPT = """\
+You are a task decomposition expert. Given a complex task, break it down into \
+atomic subtasks that can each be completed in a single AI API call.
 
 Rules:
 1. Each subtask must be self-contained and clearly described

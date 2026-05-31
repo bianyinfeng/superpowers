@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from task_decomposer.decomposer import DecomposedSubtask, TaskDecomposer
+from task_decomposer.decomposer import TaskDecomposer
 
 
 @pytest.fixture
@@ -15,12 +15,15 @@ def decomposer():
 @pytest.mark.asyncio
 async def test_decompose_returns_subtasks(decomposer):
     mock_response = AsyncMock()
+    mock_content = (
+        '{"reasoning":"Test","subtasks":['
+        '{"id":"s1","title":"Sub 1","description":"Do thing 1",'
+        '"priority":0,"dependencies":[]},'
+        '{"id":"s2","title":"Sub 2","description":"Do thing 2",'
+        '"priority":1,"dependencies":["s1"]}]}'
+    )
     mock_response.choices = [
-        AsyncMock(
-            message=AsyncMock(
-                content='{"reasoning":"Test","subtasks":[{"id":"s1","title":"Sub 1","description":"Do thing 1","priority":0,"dependencies":[]},{"id":"s2","title":"Sub 2","description":"Do thing 2","priority":1,"dependencies":["s1"]}]}'
-            )
-        )
+        AsyncMock(message=AsyncMock(content=mock_content))
     ]
 
     with patch("litellm.acompletion", return_value=mock_response):

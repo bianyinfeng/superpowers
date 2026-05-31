@@ -7,7 +7,6 @@ and injects relevant context into subtask prompts.
 
 from __future__ import annotations
 
-import os
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -38,15 +37,29 @@ class DocPacker:
     # Approximate chars per token ratio (conservative)
     CHARS_PER_TOKEN = 3.5
 
-    def __init__(self, max_tokens_per_chunk: int = 4000, max_context_tokens: int = 8000):
+    def __init__(
+        self,
+        max_tokens_per_chunk: int = 4000,
+        max_context_tokens: int = 8000,
+        allowed_base_dir: str | Path | None = None,
+    ):
         """Initialize packer with token limits.
 
         Args:
             max_tokens_per_chunk: Maximum tokens per document chunk.
             max_context_tokens: Maximum total tokens for packed context.
+            allowed_base_dir: If set, only directories under this base path are allowed.
+                Reads from TASKFLOW_DOCS_BASE_DIR env var if not provided.
         """
         self.max_tokens_per_chunk = max_tokens_per_chunk
         self.max_context_tokens = max_context_tokens
+        if allowed_base_dir is None:
+            import os
+
+            env_base = os.environ.get("TASKFLOW_DOCS_BASE_DIR")
+            self._allowed_base = Path(env_base).resolve() if env_base else None
+        else:
+            self._allowed_base = Path(allowed_base_dir).resolve()
 
     def estimate_tokens(self, text: str) -> int:
         """Estimate token count for a text string."""
@@ -116,13 +129,31 @@ class DocPacker:
 
         Returns:
             PackedContext with summary and document chunks.
+
+        Raises:
+            ValueError: If directory path is invalid or attempts path traversal.
         """
-        directory = Path(directory)
+        directory = Path(directory).resolve()
+        # Validate against allowed base directory to prevent path traversal
+        if self._allowed_base is not None:
+            try:
+                directory.relative_to(self._allowed_base)
+            except ValueError:
+                raise ValueError(
+                    f"Directory {directory} is outside allowed base: {self._allowed_base}"
+                )
+        if not directory.is_dir():
+            raise ValueError(f"Not a valid directory: {directory}")
         all_chunks: list[DocChunk] = []
         total_tokens = 0
 
         for ext in extensions:
             for filepath in sorted(directory.rglob(f"*{ext}")):
+                # Ensure files are within the directory (prevent symlink escapes)
+                try:
+                    filepath.resolve().relative_to(directory)
+                except ValueError:
+                    continue
                 if total_tokens >= self.max_context_tokens:
                     break
                 content = filepath.read_text(encoding="utf-8", errors="ignore")

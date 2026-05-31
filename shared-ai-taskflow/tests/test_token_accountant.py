@@ -1,6 +1,6 @@
 """Tests for the TokenAccountant module."""
 
-from token_accountant.accountant import TokenAccountant, RewardRate
+from token_accountant.accountant import RewardRate, TokenAccountant
 
 
 def test_calculate_reward_default():

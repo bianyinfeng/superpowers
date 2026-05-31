@@ -21,6 +21,12 @@ from token_accountant.accountant import TokenAccountant
 
 logger = logging.getLogger(__name__)
 
+DEFAULT_MODEL = "gpt-4o-mini"
+
+
+class CyclicDependencyError(Exception):
+    """Raised when a circular dependency is detected in the task DAG."""
+
 
 class TaskScheduler:
     """Schedules and executes subtasks from the task DAG."""
@@ -31,13 +37,56 @@ class TaskScheduler:
         accountant: TokenAccountant,
         max_concurrency: int = 5,
         max_retries: int = 3,
+        default_model: str = DEFAULT_MODEL,
     ):
         self.key_pool = key_pool
         self.accountant = accountant
         self.max_concurrency = max_concurrency
         self.max_retries = max_retries
+        self.default_model = default_model
         self._semaphore = asyncio.Semaphore(max_concurrency)
         self._running = False
+
+    async def _check_for_cycles(self, task_id: str) -> None:
+        """Detect circular dependencies in the subtask DAG.
+
+        Raises CyclicDependencyError if a cycle is found.
+        """
+        db = get_db()
+        async with db.session() as session:
+            result = await session.execute(
+                select(SubTask).where(SubTask.task_id == task_id)
+            )
+            subtasks = result.scalars().all()
+
+        # Build adjacency: subtask_id -> list of dependency IDs
+        graph: dict[str, list[str]] = {}
+        for subtask in subtasks:
+            deps = json.loads(subtask.dependencies) if subtask.dependencies else []
+            graph[subtask.id] = deps
+
+        # DFS cycle detection
+        WHITE, GRAY, BLACK = 0, 1, 2
+        color: dict[str, int] = {node: WHITE for node in graph}
+
+        def dfs(node: str) -> bool:
+            color[node] = GRAY
+            for dep in graph.get(node, []):
+                if dep not in color:
+                    continue  # dependency refers to non-existent subtask
+                if color[dep] == GRAY:
+                    return True  # cycle found
+                if color[dep] == WHITE and dfs(dep):
+                    return True
+            color[node] = BLACK
+            return False
+
+        for node in graph:
+            if color[node] == WHITE:
+                if dfs(node):
+                    raise CyclicDependencyError(
+                        f"Circular dependency detected in task {task_id}"
+                    )
 
     async def get_ready_subtasks(self, task_id: str) -> list[SubTask]:
         """Get subtasks whose dependencies are all completed."""
@@ -109,12 +158,13 @@ class TaskScheduler:
                 return False
 
             key_id, api_key = key_info
+            model = self.default_model
 
             # Execute with retries
             for attempt in range(self.max_retries):
                 try:
                     response = await litellm.acompletion(
-                        model="gpt-4o-mini",
+                        model=model,
                         messages=[
                             {"role": "system", "content": "Complete the following task."},
                             {"role": "user", "content": subtask.description},
@@ -129,7 +179,7 @@ class TaskScheduler:
                     await self.accountant.record_usage(
                         api_key_id=key_id,
                         subtask_id=subtask_id,
-                        model="gpt-4o-mini",
+                        model=model,
                         prompt_tokens=usage.prompt_tokens,
                         completion_tokens=usage.completion_tokens,
                     )
@@ -179,6 +229,9 @@ class TaskScheduler:
         """
         self._running = True
         db = get_db()
+
+        # Check for circular dependencies before starting
+        await self._check_for_cycles(task_id)
 
         # Mark task as running
         async with db.session() as session:

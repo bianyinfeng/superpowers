@@ -7,7 +7,7 @@ from contextlib import asynccontextmanager
 
 import uvicorn
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from api_key_pool.pool import APIKeyPool
 from doc_packer.packer import DocPacker
@@ -46,8 +46,8 @@ app = FastAPI(
 
 
 class TaskCreateRequest(BaseModel):
-    title: str
-    description: str
+    title: str = Field(..., min_length=1, max_length=200)
+    description: str = Field(..., min_length=1, max_length=50000)
     context_directory: str | None = None
 
 

@@ -7,7 +7,8 @@ and status monitoring.
 from __future__ import annotations
 
 import enum
-import secrets
+import logging
+import os
 from datetime import datetime
 
 from cryptography.fernet import Fernet
@@ -15,6 +16,8 @@ from sqlalchemy import select, update
 
 from storage.database import get_db
 from storage.models import APIKeyRecord, KeyStatus
+
+logger = logging.getLogger(__name__)
 
 
 class LoadBalanceStrategy(str, enum.Enum):
@@ -27,9 +30,21 @@ class APIKeyPool:
     """Manages a pool of shared API keys."""
 
     def __init__(self, encryption_key: bytes | None = None):
-        """Initialize pool with optional encryption key for storing API keys."""
+        """Initialize pool with optional encryption key for storing API keys.
+
+        If no key is provided, reads from TASKFLOW_ENCRYPTION_KEY env var.
+        If neither is available, generates a new key (development only).
+        """
         if encryption_key is None:
-            encryption_key = Fernet.generate_key()
+            env_key = os.environ.get("TASKFLOW_ENCRYPTION_KEY")
+            if env_key:
+                encryption_key = env_key.encode()
+            else:
+                logger.warning(
+                    "No TASKFLOW_ENCRYPTION_KEY set; generating ephemeral key. "
+                    "Encrypted keys will be unrecoverable after restart."
+                )
+                encryption_key = Fernet.generate_key()
         self._cipher = Fernet(encryption_key)
         self._round_robin_index = 0
 
@@ -157,17 +172,17 @@ class APIKeyPool:
             try:
                 import litellm
                 decrypted = self._decrypt_key(record.encrypted_key)
+                model = record.model_name or f"{record.provider}/gpt-4o-mini"
                 # Minimal call to verify key validity
                 await litellm.acompletion(
-                    model=f"{record.provider}/gpt-4o-mini"
-                    if record.model_name is None
-                    else record.model_name,
+                    model=model,
                     messages=[{"role": "user", "content": "hi"}],
                     max_tokens=1,
                     api_key=decrypted,
                 )
                 return True
-            except Exception:
+            except Exception as e:
+                logger.warning("Health check failed for key %s: %s", key_id, e)
                 await self.mark_key_status(key_id, KeyStatus.INACTIVE)
                 return False
 
