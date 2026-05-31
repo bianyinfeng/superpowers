@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 
 static void set_error(char *err, int err_len, const char *msg) {
     if (err && err_len > 0) {

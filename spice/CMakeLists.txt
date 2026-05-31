@@ -12,6 +12,7 @@ add_executable(spice
 )
 
 target_include_directories(spice PRIVATE include)
+target_link_libraries(spice PRIVATE m)
 
 enable_testing()
 
@@ -20,7 +21,7 @@ add_test(
     COMMAND spice ${CMAKE_CURRENT_SOURCE_DIR}/examples/divider_op.cir
 )
 set_tests_properties(op_divider PROPERTIES
-    PASS_REGULAR_EXPRESSION "V\(out\)=5"
+    PASS_REGULAR_EXPRESSION "V\\(out\\)=5(\\.[0-9]+)?"
 )
 
 add_test(
@@ -28,5 +29,5 @@ add_test(
     COMMAND spice ${CMAKE_CURRENT_SOURCE_DIR}/examples/rc_tran.cir
 )
 set_tests_properties(tran_rc PROPERTIES
-    PASS_REGULAR_EXPRESSION "0\.001,3\.[0-9]+"
+    PASS_REGULAR_EXPRESSION "0\\.001,5,3\\.[0-9]+"
 )
