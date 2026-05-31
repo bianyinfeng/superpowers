@@ -1,0 +1,9 @@
+/tmp/workspace/bianyinfeng/superpowers/ti-cas/build/CMakeFiles/ti_cas_repl.dir
+/tmp/workspace/bianyinfeng/superpowers/ti-cas/build/CMakeFiles/test_parser.dir
+/tmp/workspace/bianyinfeng/superpowers/ti-cas/build/CMakeFiles/test_simplify.dir
+/tmp/workspace/bianyinfeng/superpowers/ti-cas/build/CMakeFiles/test_differentiate.dir
+/tmp/workspace/bianyinfeng/superpowers/ti-cas/build/CMakeFiles/test_integrate.dir
+/tmp/workspace/bianyinfeng/superpowers/ti-cas/build/CMakeFiles/test_cas.dir
+/tmp/workspace/bianyinfeng/superpowers/ti-cas/build/CMakeFiles/test.dir
+/tmp/workspace/bianyinfeng/superpowers/ti-cas/build/CMakeFiles/edit_cache.dir
+/tmp/workspace/bianyinfeng/superpowers/ti-cas/build/CMakeFiles/rebuild_cache.dir

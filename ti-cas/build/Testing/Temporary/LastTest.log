@@ -1,0 +1,120 @@
+Start testing: May 31 23:55 UTC
+----------------------------------------------------------
+1/5 Testing: test_parser
+1/5 Test: test_parser
+Command: "/tmp/workspace/bianyinfeng/superpowers/ti-cas/build/test_parser"
+Directory: /tmp/workspace/bianyinfeng/superpowers/ti-cas/build
+"test_parser" start time: May 31 23:55 UTC
+Output:
+----------------------------------------------------------
+Parser tests:
+  [PASS] numbers
+  [PASS] variables
+  [PASS] binary operations
+  [PASS] precedence
+  [PASS] functions
+  [PASS] complex expressions
+  [PASS] negative values
+All parser tests passed!
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"test_parser" end time: May 31 23:55 UTC
+"test_parser" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/5 Testing: test_simplify
+2/5 Test: test_simplify
+Command: "/tmp/workspace/bianyinfeng/superpowers/ti-cas/build/test_simplify"
+Directory: /tmp/workspace/bianyinfeng/superpowers/ti-cas/build
+"test_simplify" start time: May 31 23:55 UTC
+Output:
+----------------------------------------------------------
+Simplification tests:
+  [PASS] constant folding
+  [PASS] identity rules
+  [PASS] power rules
+  [PASS] cancellation
+  [PASS] function evaluation
+All simplification tests passed!
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"test_simplify" end time: May 31 23:55 UTC
+"test_simplify" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/5 Testing: test_differentiate
+3/5 Test: test_differentiate
+Command: "/tmp/workspace/bianyinfeng/superpowers/ti-cas/build/test_differentiate"
+Directory: /tmp/workspace/bianyinfeng/superpowers/ti-cas/build
+"test_differentiate" start time: May 31 23:55 UTC
+Output:
+----------------------------------------------------------
+Differentiation tests:
+  [PASS] basic differentiation
+  [PASS] polynomial differentiation
+  [PASS] trigonometric differentiation
+  [PASS] chain rule
+  [PASS] product rule
+  [PASS] quotient rule
+  [PASS] exp/log differentiation
+All differentiation tests passed!
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"test_differentiate" end time: May 31 23:55 UTC
+"test_differentiate" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/5 Testing: test_integrate
+4/5 Test: test_integrate
+Command: "/tmp/workspace/bianyinfeng/superpowers/ti-cas/build/test_integrate"
+Directory: /tmp/workspace/bianyinfeng/superpowers/ti-cas/build
+"test_integrate" start time: May 31 23:55 UTC
+Output:
+----------------------------------------------------------
+Integration tests:
+  [PASS] constant integral
+  [PASS] power integral
+  [PASS] trig integral
+  [PASS] exp integral
+  [PASS] linear substitution
+  [PASS] polynomial integral
+  [PASS] ln integral
+All integration tests passed!
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"test_integrate" end time: May 31 23:55 UTC
+"test_integrate" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/5 Testing: test_cas
+5/5 Test: test_cas
+Command: "/tmp/workspace/bianyinfeng/superpowers/ti-cas/build/test_cas"
+Directory: /tmp/workspace/bianyinfeng/superpowers/ti-cas/build
+"test_cas" start time: May 31 23:55 UTC
+Output:
+----------------------------------------------------------
+CAS integration tests:
+  [PASS] parse and simplify
+  [PASS] numerical evaluation
+  [PASS] nth derivative
+  [PASS] substitution
+  [PASS] diff then integrate roundtrip
+  [PASS] multivariate differentiation
+All CAS tests passed!
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"test_cas" end time: May 31 23:55 UTC
+"test_cas" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: May 31 23:55 UTC

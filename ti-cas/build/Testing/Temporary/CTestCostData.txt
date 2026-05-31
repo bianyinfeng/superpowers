@@ -1,0 +1,6 @@
+test_parser 1 0.00238999
+test_simplify 1 0.00185882
+test_differentiate 1 0.00168276
+test_integrate 1 0.00167095
+test_cas 1 0.00176896
+---
