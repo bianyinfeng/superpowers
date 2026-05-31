@@ -124,3 +124,31 @@ def fetch_weekly_data(code: str, weeks: int = 120) -> pd.DataFrame:
         df = df.tail(weeks).reset_index(drop=True)
 
     return df[required_cols + (["amount"] if "amount" in df.columns else [])]
+
+
+def fetch_all_stock_codes() -> pd.DataFrame:
+    """
+    获取全部A股股票代码列表
+
+    Returns
+    -------
+    pd.DataFrame
+        包含 code, name 列的DataFrame
+    """
+    if ak is None:
+        raise ImportError(
+            "akshare 未安装，请运行: pip install akshare"
+        )
+
+    df = ak.stock_zh_a_spot_em()
+
+    df = df.rename(columns={
+        "代码": "code",
+        "名称": "name",
+    })
+
+    # 过滤ST和退市股
+    mask = ~df["name"].str.contains(r"ST|退市|\*", na=False)
+    df = df[mask].reset_index(drop=True)
+
+    return df[["code", "name"]]
