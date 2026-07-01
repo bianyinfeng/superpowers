@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>数据中台运营平台 (DataOps) - 商业银行版</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <script>
+    (function () {
+      function ensurePanel() {
+        var panel = document.getElementById('boot-error-panel');
+        if (panel) {
+          return panel;
+        }
+        panel = document.createElement('pre');
+        panel.id = 'boot-error-panel';
+        panel.style.display = 'none';
+        panel.style.whiteSpace = 'pre-wrap';
+        panel.style.margin = '16px';
+        panel.style.padding = '16px';
+        panel.style.border = '1px solid #fecaca';
+        panel.style.borderRadius = '12px';
+        panel.style.background = '#fff1f2';
+        panel.style.color = '#881337';
+        panel.style.font = '12px/1.5 Consolas, monospace';
+        document.body.insertBefore(panel, document.body.firstChild);
+        return panel;
+      }
+
+      window.__DATAOPS_SHOW_BOOT_ERROR = function (message) {
+        var panel = ensurePanel();
+        panel.style.display = 'block';
+        panel.textContent = String(message || 'Unknown bootstrap error');
+      };
+
+      window.addEventListener('error', function (event) {
+        var details = [
+          'DataOps 启动失败',
+          'Message: ' + (event.message || 'Unknown error'),
+          'Source: ' + (event.filename || 'inline'),
+          'Line: ' + (event.lineno || 0) + ', Column: ' + (event.colno || 0)
+        ];
+        if (event.error && event.error.stack) {
+          details.push('Stack: ' + event.error.stack);
+        }
+        window.__DATAOPS_SHOW_BOOT_ERROR(details.join('\n'));
+      });
+
+      window.addEventListener('unhandledrejection', function (event) {
+        var reason = event.reason;
+        window.__DATAOPS_SHOW_BOOT_ERROR(
+          'DataOps 启动失败\nUnhandled Promise Rejection: ' +
+          (reason && reason.stack ? reason.stack : String(reason))
+        );
+      });
+    })();
+  </script>
+  <div id="app">
+    <!-- 应用加载中 -->
+    <div v-if="loading" class="app-loading">
+      <div class="loading-spinner"></div>
+      <p>正在加载数据中台运营平台...</p>
+    </div>
+
+    <!-- 主布局 -->
+    <div v-else class="app-layout">
+      <!-- 侧边导航栏 -->
+      <aside class="sidebar" :class="{ collapsed: sidebarCollapsed }">
+        <!-- Logo 区域 -->
+        <div class="sidebar-logo">
+          <div class="logo-icon">🏦</div>
+          <div class="logo-text" v-if="!sidebarCollapsed">
+            <div class="logo-title">数据中台</div>
+            <div class="logo-subtitle">DataOps 运营平台</div>
+          </div>
+        </div>
+
+        <!-- 用户信息 -->
+        <div class="sidebar-user" v-if="!sidebarCollapsed">
+          <div class="user-avatar">{{ currentUser.avatar }}</div>
+          <div class="user-info">
+            <div class="user-name">{{ currentUser.name }}</div>
+            <div class="user-role">{{ currentUser.dept }}</div>
+          </div>
+        </div>
+
+        <!-- 导航菜单 -->
+        <nav class="sidebar-nav">
+          <div class="nav-section-label" v-if="!sidebarCollapsed">概览</div>
+          <router-link to="/" class="nav-item" active-class="active" exact>
+            <span class="nav-icon">📊</span>
+            <span class="nav-text" v-if="!sidebarCollapsed">运营看板</span>
+          </router-link>
+
+          <div class="nav-section-label" v-if="!sidebarCollapsed">需求流转</div>
+          <router-link to="/requirements" class="nav-item" active-class="active">
+            <span class="nav-icon">📋</span>
+            <span class="nav-text" v-if="!sidebarCollapsed">数据需求管理</span>
+            <span class="nav-badge" v-if="!sidebarCollapsed && pendingCount > 0">{{ pendingCount }}</span>
+          </router-link>
+          <router-link to="/workflow" class="nav-item" active-class="active">
+            <span class="nav-icon">🔄</span>
+            <span class="nav-text" v-if="!sidebarCollapsed">审核流转</span>
+            <span class="nav-badge" v-if="!sidebarCollapsed && myApprovalCount > 0">{{ myApprovalCount }}</span>
+          </router-link>
+
+          <div class="nav-section-label" v-if="!sidebarCollapsed">数据开发</div>
+          <router-link to="/standards" class="nav-item" active-class="active">
+            <span class="nav-icon">📐</span>
+            <span class="nav-text" v-if="!sidebarCollapsed">数据标准匹配</span>
+          </router-link>
+          <router-link to="/devspec" class="nav-item" active-class="active">
+            <span class="nav-icon">📝</span>
+            <span class="nav-text" v-if="!sidebarCollapsed">数据规范开发</span>
+          </router-link>
+          <router-link to="/scripts" class="nav-item" active-class="active">
+            <span class="nav-icon">💻</span>
+            <span class="nav-text" v-if="!sidebarCollapsed">脚本管理</span>
+          </router-link>
+
+          <div class="nav-section-label" v-if="!sidebarCollapsed">运维管理</div>
+          <router-link to="/deployment" class="nav-item" active-class="active">
+            <span class="nav-icon">🚀</span>
+            <span class="nav-text" v-if="!sidebarCollapsed">灰度测试上线</span>
+          </router-link>
+          <router-link to="/verification" class="nav-item" active-class="active">
+            <span class="nav-icon">✅</span>
+            <span class="nav-text" v-if="!sidebarCollapsed">数据核验跑批</span>
+          </router-link>
+          <router-link to="/metadata" class="nav-item" active-class="active">
+            <span class="nav-icon">🗄️</span>
+            <span class="nav-text" v-if="!sidebarCollapsed">元数据管理</span>
+          </router-link>
+        </nav>
+
+        <!-- 侧边栏底部 -->
+        <div class="sidebar-footer" v-if="!sidebarCollapsed">
+          <div class="footer-info">
+            <div>版本 v2.4.1</div>
+            <div>© 2024 数据中台部</div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- 主内容区 -->
+      <div class="main-area">
+        <!-- 顶部导航栏 -->
+        <header class="top-header">
+          <div class="header-left">
+            <button class="sidebar-toggle" @click="sidebarCollapsed = !sidebarCollapsed" title="折叠侧边栏">
+              ☰
+            </button>
+            <div class="breadcrumb">
+              <span>数据中台</span>
+              <span class="bc-sep">›</span>
+              <span>{{ currentPageTitle }}</span>
+            </div>
+          </div>
+          <div class="header-right">
+            <!-- 全局搜索 -->
+            <div class="header-search">
+              <input type="text" placeholder="搜索需求、脚本、表名..." v-model="globalSearch" @keyup.enter="doSearch" />
+              <span class="search-icon">🔍</span>
+            </div>
+            <!-- 通知铃铛 -->
+            <div class="notification-btn" @click="showNotifications = !showNotifications">
+              <span>🔔</span>
+              <span class="notif-count" v-if="unreadCount > 0">{{ unreadCount }}</span>
+            </div>
+            <!-- 通知下拉 -->
+            <div class="notification-dropdown" v-if="showNotifications" v-click-outside="() => showNotifications = false">
+              <div class="notif-header">
+                <span>系统通知</span>
+                <button @click="markAllRead" class="btn-text">全部已读</button>
+              </div>
+              <div class="notif-list">
+                <div
+                  v-for="n in notifications"
+                  :key="n.id"
+                  class="notif-item"
+                  :class="{ unread: !n.read, ['notif-' + n.type]: true }"
+                >
+                  <div class="notif-icon">{{ notifIcon(n.type) }}</div>
+                  <div class="notif-body">
+                    <div class="notif-title">{{ n.title }}</div>
+                    <div class="notif-content">{{ n.content }}</div>
+                    <div class="notif-time">{{ n.time }}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="notif-footer">
+                <router-link to="/" @click="showNotifications = false">查看全部通知</router-link>
+              </div>
+            </div>
+            <!-- 用户头像 -->
+            <div class="header-user">
+              <div class="header-avatar">{{ currentUser.avatar }}</div>
+              <span>{{ currentUser.name }}</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- 路由视图 -->
+        <main class="page-content">
+          <router-view></router-view>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vue.js 3 + Vue Router 4 CDN -->
+  <script src="https://unpkg.com/vue@3.4.21/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/vue-router@4.3.0/dist/vue-router.global.prod.js"></script>
+
+  <!-- 运行时配置：可由后端模板覆盖，或在控制台/localStorage调整 -->
+  <script>
+    window.__DATAOPS_CONFIG = Object.assign({
+      useMock: true,
+      apiBaseUrl: 'http://127.0.0.1:8081/api',
+      requestTimeoutMs: 10000,
+      authToken: ''
+    }, window.__DATAOPS_CONFIG || {});
+  </script>
+
+  <!-- Mock 数据 -->
+  <script src="js/data.js?v=20260813"></script>
+
+  <!-- API 对接骨架 -->
+  <script src="js/api.js?v=20260813"></script>
+
+  <!-- 各模块视图组件 -->
+  <script src="js/views/dashboard.js"></script>
+  <script src="js/views/requirements.js"></script>
+  <script src="js/views/workflow.js"></script>
+  <script src="js/views/standards.js"></script>
+  <script src="js/views/devspec.js"></script>
+  <script src="js/views/scripts.js"></script>
+  <script src="js/views/deployment.js?v=20260813"></script>
+  <script src="js/views/verification.js"></script>
+  <script src="js/views/metadata.js"></script>
+
+  <!-- 主应用 -->
+  <script src="js/app.js?v=20260813"></script>
+</body>
+</html>
