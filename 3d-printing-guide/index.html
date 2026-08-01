@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3D打印材料指南 — 参数设置与问题解决</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ===== HEADER / NAV ===== -->
+<header class="site-header">
+  <div class="container header-inner">
+    <div class="logo">
+      <span class="logo-icon">🖨️</span>
+      <span class="logo-text">3D打印材料指南</span>
+    </div>
+    <nav class="main-nav" id="mainNav">
+      <a href="#materials">材料总览</a>
+      <a href="#params">参数详解</a>
+      <a href="#troubleshoot">问题排查</a>
+      <a href="#tips">实用技巧</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="菜单">☰</button>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="container hero-inner">
+    <h1>少踩坑，多出好件</h1>
+    <p class="hero-sub">全面覆盖 PLA · ABS · PETG · TPU · Nylon · Resin，<br>参数设置 × 常见故障 × 解决方案，一站查清。</p>
+    <a href="#materials" class="btn-primary">开始探索 →</a>
+  </div>
+</section>
+
+<!-- ===== QUICK REFERENCE BAR ===== -->
+<section class="quick-ref" id="quickRef">
+  <div class="container quick-grid">
+    <div class="quick-card" data-target="pla">
+      <span class="qc-icon" style="background:#4caf50">PLA</span>
+      <span>入门首选</span>
+    </div>
+    <div class="quick-card" data-target="abs">
+      <span class="qc-icon" style="background:#f44336">ABS</span>
+      <span>强度耐热</span>
+    </div>
+    <div class="quick-card" data-target="petg">
+      <span class="qc-icon" style="background:#2196f3">PETG</span>
+      <span>韧性透明</span>
+    </div>
+    <div class="quick-card" data-target="tpu">
+      <span class="qc-icon" style="background:#ff9800">TPU</span>
+      <span>弹性柔软</span>
+    </div>
+    <div class="quick-card" data-target="nylon">
+      <span class="qc-icon" style="background:#9c27b0">Nylon</span>
+      <span>工程级韧性</span>
+    </div>
+    <div class="quick-card" data-target="resin">
+      <span class="qc-icon" style="background:#00bcd4">Resin</span>
+      <span>超高精度</span>
+    </div>
+    <div class="quick-card" data-target="asa">
+      <span class="qc-icon" style="background:#795548">ASA</span>
+      <span>户外耐候</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MATERIALS OVERVIEW ===== -->
+<section class="section" id="materials">
+  <div class="container">
+    <h2 class="section-title">材料总览</h2>
+    <p class="section-sub">点击材料卡片，跳转到详细参数与问题解析。</p>
+
+    <div class="material-grid">
+
+      <!-- PLA -->
+      <div class="mat-card" id="pla">
+        <div class="mat-header" style="--color:#4caf50">
+          <h3>PLA <small>聚乳酸</small></h3>
+          <span class="badge badge-easy">入门</span>
+        </div>
+        <p class="mat-desc">最主流的3D打印耗材，源自可再生资源，无需加热床（或低温即可），几乎适合所有FDM打印机。</p>
+        <div class="mat-tags">
+          <span class="tag">易于打印</span><span class="tag">色彩丰富</span><span class="tag">可降解</span><span class="tag">不耐高温</span>
+        </div>
+        <table class="param-table">
+          <thead><tr><th>参数</th><th>推荐范围</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td>喷嘴温度</td><td>190–220 °C</td><td>品牌不同差异较大，建议从210°C起试</td></tr>
+            <tr><td>热床温度</td><td>0–60 °C</td><td>有热床用50–60°C，无热床可直接打</td></tr>
+            <tr><td>打印速度</td><td>40–80 mm/s</td><td>首层降至20–30 mm/s</td></tr>
+            <tr><td>冷却风扇</td><td>100%</td><td>充分冷却可得清晰细节</td></tr>
+            <tr><td>回抽距离</td><td>Direct: 0.5–2 mm<br>Bowden: 4–7 mm</td><td>过多回抽导致断丝</td></tr>
+            <tr><td>回抽速度</td><td>25–45 mm/s</td><td>-</td></tr>
+            <tr><td>层高</td><td>0.1–0.3 mm</td><td>喷嘴直径的25–75%</td></tr>
+            <tr><td>填充密度</td><td>15–30%</td><td>结构件20%，功能件30%+</td></tr>
+          </tbody>
+        </table>
+        <div class="issues-section">
+          <h4>常见问题 & 解决方案</h4>
+          <div class="issue-list">
+            <details>
+              <summary>🔴 翘边 / 第一层不粘</summary>
+              <div class="issue-body">
+                <p><strong>原因：</strong>床面不干净、首层高度过高、床温不足。</p>
+                <ul>
+                  <li>用异丙醇（IPA）擦拭打印平台</li>
+                  <li>重新调平，首层压扁纸张摩擦即可</li>
+                  <li>热床升至55–60°C</li>
+                  <li>涂抹固体胶棒或贴美纹纸</li>
+                  <li>关闭打印机附近的风扇/空调</li>
+                </ul>
+              </div>
+            </details>
+            <details>
+              <summary>🟡 拉丝（Stringing）</summary>
+              <div class="issue-body">
+                <p><strong>原因：</strong>温度偏高、回抽不足、移动速度慢。</p>
+                <ul>
+                  <li>降低打印温度 5–10°C</li>
+                  <li>增大回抽距离/速度（小幅调整，步进测试）</li>
+                  <li>启用"Combing"模式，让喷嘴在实体内部移动</li>
+                  <li>提高空走速度至150 mm/s</li>
+                </ul>
+              </div>
+            </details>
+            <details>
+              <summary>🟡 层间开裂 / 层粘不牢</summary>
+              <div class="issue-body">
+                <p><strong>原因：</strong>温度偏低、速度过快、冷却过度。</p>
+                <ul>
+                  <li>提高打印温度 5–10°C</li>
+                  <li>降低打印速度</li>
+                  <li>减少冷却风扇转速至50–70%</li>
+                </ul>
+              </div>
+            </details>
+            <details>
+              <summary>🟡 过热变形 / 悬空坍塌</summary>
+              <div class="issue-body">
+                <p><strong>原因：</strong>PLA软化点低（~60°C），悬空处冷却不足。</p>
+                <ul>
+                  <li>打印小尺寸件时降速，给冷却时间</li>
+                  <li>同时打印多个相同模型，让每层有时间冷却</li>
+                  <li>调整支撑角度阈值（&lt;45°加支撑）</li>
+                </ul>
+              </div>
+            </details>
+            <details>
+              <summary>🔴 堵头 / 断丝</summary>
+              <div class="issue-body">
+                <p><strong>原因：</strong>耗材受潮、温度不稳、喷嘴磨损或积碳。</p>
+                <ul>
+                  <li>冷拔（Cold Pull）清洁喷嘴</li>
+                  <li>用80°C干燥箱烘干耗材4–6小时</li>
+                  <li>检查送丝齿轮是否打滑或磨损</li>
+                  <li>更换喷嘴</li>
+                </ul>
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+
+      <!-- ABS -->
+      <div class="mat-card" id="abs">
+        <div class="mat-header" style="--color:#f44336">
+          <h3>ABS <small>丙烯腈丁二烯苯乙烯</small></h3>
+          <span class="badge badge-medium">中级</span>
+        </div>
+        <p class="mat-desc">经典工程塑料，耐高温（热变形温度约100°C），高强度，但打印难度较高，需要密闭腔体和充分排风。</p>
+        <div class="mat-tags">
+          <span class="tag">耐高温</span><span class="tag">高强度</span><span class="tag">可后处理</span><span class="tag">有刺激气味</span>
+        </div>
+        <table class="param-table">
+          <thead><tr><th>参数</th><th>推荐范围</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td>喷嘴温度</td><td>230–250 °C</td><td>建议从240°C开始</td></tr>
+            <tr><td>热床温度</td><td>90–110 °C</td><td>必须使用热床，建议100°C</td></tr>
+            <tr><td>打印速度</td><td>30–60 mm/s</td><td>慢速更稳定，减少翘边</td></tr>
+            <tr><td>冷却风扇</td><td>0–20%</td><td>大面积关闭，小悬空≤20%</td></tr>
+            <tr><td>回抽距离</td><td>Direct: 1–3 mm<br>Bowden: 5–8 mm</td><td>-</td></tr>
+            <tr><td>层高</td><td>0.15–0.3 mm</td><td>-</td></tr>
+            <tr><td>腔体温度</td><td>45–60 °C</td><td>密闭腔体关键，防翘边</td></tr>
+          </tbody>
+        </table>
+        <div class="issues-section">
+          <h4>常见问题 & 解决方案</h4>
+          <div class="issue-list">
+            <details>
+              <summary>🔴 严重翘边 / 开裂</summary>
+              <div class="issue-body">
+                <p><strong>原因：</strong>ABS收缩率高（0.8%），温度梯度过大。</p>
+                <ul>
+                  <li>使用全密闭腔体打印机</li>
+                  <li>热床贴美纹纸或Kapton胶带，涂ABS丙酮浆</li>
+                  <li>模型底部加大Brim（裙边宽度10 mm+）</li>
+                  <li>关闭风扇</li>
+                  <li>打印室温保持&gt;25°C</li>
+                </ul>
+              </div>
+            </details>
+            <details>
+              <summary>🟡 气泡 / 层间气孔</summary>
+              <div class="issue-body">
+                <p><strong>原因：</strong>耗材受潮，加热时水分气化。</p>
+                <ul>
+                  <li>80°C烘干4–6小时</li>
+                  <li>打印时使用干燥盒送丝</li>
+                </ul>
+              </div>
+            </details>
+            <details>
+              <summary>🟡 表面粗糙 / 层纹明显</summary>
+              <div class="issue-body">
+                <p><strong>原因：</strong>层高设定偏大，或温度偏低。</p>
+                <ul>
+                  <li>降低层高至0.15–0.2 mm</li>
+                  <li>适当提高温度5°C</li>
+                  <li>丙酮蒸汽抛光（仅ABS/ASA适用）得到光滑表面</li>
+                </ul>
+              </div>
+            </details>
+            <details>
+              <summary>🔴 有毒气味 / 室内打印注意</summary>
+              <div class="issue-body">
+                <p><strong>原因：</strong>ABS高温分解产生苯乙烯等VOC。</p>
+                <ul>
+                  <li>打印机放在通风良好或独立空间</li>
+                  <li>配置HEPA+活性炭过滤器</li>
+                  <li>打印期间尽量离开房间</li>
+                </ul>
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+
+      <!-- PETG -->
+      <div class="mat-card" id="petg">
+        <div class="mat-header" style="--color:#2196f3">
+          <h3>PETG <small>聚对苯二甲酸乙二醇酯-共-乙二醇</small></h3>
+          <span class="badge badge-easy">推荐</span>
+        </div>
+        <p class="mat-desc">兼顾PLA易打印性与ABS强度，轻微柔性，化学耐受性好，适合日用容器、机械件，半透明效果出众。</p>
+        <div class="mat-tags">
+          <span class="tag">韧性好</span><span class="tag">半透明</span><span class="tag">食品级可选</span><span class="tag">易拉丝</span>
+        </div>
+        <table class="param-table">
+          <thead><tr><th>参数</th><th>推荐范围</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td>喷嘴温度</td><td>230–250 °C</td><td>建议从235°C开始</td></tr>
+            <tr><td>热床温度</td><td>70–90 °C</td><td>建议80°C，玻璃床效果优秀</td></tr>
+            <tr><td>打印速度</td><td>30–60 mm/s</td><td>不宜过快，否则分层</td></tr>
+            <tr><td>冷却风扇</td><td>30–50%</td><td>过强冷却导致层粘差</td></tr>
+            <tr><td>回抽距离</td><td>Direct: 0.5–1.5 mm<br>Bowden: 3–6 mm</td><td>PETG回抽过多会堵</td></tr>
+            <tr><td>层高</td><td>0.15–0.3 mm</td><td>-</td></tr>
+            <tr><td>流量</td><td>95–100%</td><td>稍微欠挤减少粘喷嘴</td></tr>
+          </tbody>
+        </table>
+        <div class="issues-section">
+          <h4>常见问题 & 解决方案</h4>
+          <div class="issue-list">
+            <details>
+              <summary>🔴 严重拉丝（比PLA更明显）</summary>
+              <div class="issue-body">
+                <p><strong>原因：</strong>PETG黏度高，拉丝倾向天生强。</p>
+                <ul>
+                  <li>温度降至230–235°C</li>
+                  <li>回抽调整，Direct挤出机减小回抽（0.8–1.2 mm）</li>
+                  <li>提高移动速度</li>
+                  <li>在切片软件开启"Z-hop"避免喷嘴刮带</li>
+                </ul>
+              </div>
+            </details>
+            <details>
+              <summary>🟡 粘喷嘴 / 料粘在喷嘴上</summary>
+              <div class="issue-body">
+                <p><strong>原因：</strong>PETG对金属亲和性强。</p>
+                <ul>
+                  <li>Flow rate降至95%，减少溢料</li>
+                  <li>首层高度适当提高</li>
+                  <li>使用PEI弹簧钢板，取件时弯折即脱</li>
+                </ul>
+              </div>
+            </details>
+            <details>
+              <summary>🟡 层间粘结差 / 层分层</summary>
+              <div class="issue-body">
+                <p><strong>原因：</strong>温度偏低、风扇太强。</p>
+                <ul>
+                  <li>提高温度 5°C</li>
+                  <li>降低冷却风扇至30%</li>
+                  <li>降低打印速度</li>
+                </ul>
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+
+      <!-- TPU -->
+      <div class="mat-card" id="tpu">
+        <div class="mat-header" style="--color:#ff9800">
+          <h3>TPU <small>热塑性聚氨酯弹性体</small></h3>
+          <span class="badge badge-hard">进阶</span>
+        </div>
+        <p class="mat-desc">弹性橡胶类耗材，可拉伸压缩，耐磨耐油，适合手机壳、鞋底、密封件。硬度从Shore 85A到98A不等。</p>
+        <div class="mat-tags">
+          <span class="tag">弹性</span><span class="tag">耐磨</span><span class="tag">耐油</span><span class="tag">慢速打印</span>
+        </div>
+        <table class="param-table">
+          <thead><tr><th>参数</th><th>推荐范围</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td>喷嘴温度</td><td>220–235 °C</td><td>根据硬度调整，软料偏高</td></tr>
+            <tr><td>热床温度</td><td>30–60 °C</td><td>可不用热床，有更好</td></tr>
+            <tr><td>打印速度</td><td>15–30 mm/s</td><td>关键！速度过快必堵</td></tr>
+            <tr><td>冷却风扇</td><td>50–100%</td><td>充分冷却减少粘连</td></tr>
+            <tr><td>回抽</td><td>尽量减少或禁用</td><td>弹性料回抽易堵塞</td></tr>
+            <tr><td>挤出机类型</td><td>Direct优先</td><td>Bowden送软料困难</td></tr>
+            <tr><td>填充</td><td>15–25%</td><td>Gyroid/Honeycomb增弹性</td></tr>
+          </tbody>
+        </table>
+        <div class="issues-section">
+          <h4>常见问题 & 解决方案</h4>
+          <div class="issue-list">
+            <details>
+              <summary>🔴 堵塞 / 料在送丝管打结</summary>
+              <div class="issue-body">
+                <p><strong>原因：</strong>弹性料速度过快会在送丝管弯折堆积。</p>
+                <ul>
+                  <li>打印速度降至15–20 mm/s</li>
+                  <li>使用Direct挤出机，缩短料路</li>
+                  <li>给Bowden管套管处使用引导管，减少弯曲</li>
+                  <li>禁用或最小化回抽</li>
+                </ul>
+              </div>
+            </details>
+            <details>
+              <summary>🟡 表面拉丝严重</summary>
+              <div class="issue-body">
+                <ul>
+                  <li>减小回抽（0–1 mm即可）</li>
+                  <li>适当降温</li>
+                  <li>增大移动速度</li>
+                </ul>
+              </div>
+            </details>
+            <details>
+              <summary>🟡 尺寸偏差 / 件偏小</summary>
+              <div class="issue-body">
+                <p><strong>原因：</strong>弹性件脱模后会收缩或变形。</p>
+                <ul>
+                  <li>在模型设计中加入尺寸补偿（1–2%）</li>
+                  <li>增大填充密度</li>
+                </ul>
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nylon -->
+      <div class="mat-card" id="nylon">
+        <div class="mat-header" style="--color:#9c27b0">
+          <h3>Nylon <small>尼龙（PA6 / PA12）</small></h3>
+          <span class="badge badge-hard">高级</span>
+        </div>
+        <p class="mat-desc">工程级耗材，韧性极高，耐磨耐疲劳，适合齿轮、铰链、功能件。强吸湿性是最大挑战。</p>
+        <div class="mat-tags">
+          <span class="tag">超高韧性</span><span class="tag">耐磨</span><span class="tag">强吸湿</span><span class="tag">需密闭腔</span>
+        </div>
+        <table class="param-table">
+          <thead><tr><th>参数</th><th>推荐范围</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td>喷嘴温度</td><td>240–270 °C</td><td>PA6: 250–265°C, PA12: 240–255°C</td></tr>
+            <tr><td>热床温度</td><td>70–90 °C</td><td>建议PEI平台，Garolite效果最好</td></tr>
+            <tr><td>打印速度</td><td>30–50 mm/s</td><td>慢速改善层粘</td></tr>
+            <tr><td>冷却风扇</td><td>0–20%</td><td>大件关闭，改善层粘</td></tr>
+            <tr><td>腔体温度</td><td>45–60 °C</td><td>密闭腔大幅减少翘边</td></tr>
+            <tr><td>干燥要求</td><td>80°C × 8–12h</td><td>必须！受潮后气泡严重</td></tr>
+          </tbody>
+        </table>
+        <div class="issues-section">
+          <h4>常见问题 & 解决方案</h4>
+          <div class="issue-list">
+            <details>
+              <summary>🔴 吸湿导致气泡/爆裂声</summary>
+              <div class="issue-body">
+                <p><strong>原因：</strong>Nylon在空气中数小时即可吸湿变质。</p>
+                <ul>
+                  <li>80°C烘干12小时以上，打印前测试</li>
+                  <li>打印时使用密封送丝干燥盒（如PrintDry）</li>
+                  <li>未用耗材真空袋保存+硅胶干燥剂</li>
+                </ul>
+              </div>
+            </details>
+            <details>
+              <summary>🔴 翘边 / 层开裂</summary>
+              <div class="issue-body">
+                <ul>
+                  <li>使用密闭腔体打印机</li>
+                  <li>热床贴Garolite/PEI</li>
+                  <li>关闭冷却风扇</li>
+                  <li>加大Brim或使用底部筏</li>
+                </ul>
+              </div>
+            </details>
+            <details>
+              <summary>🟡 成品件尺寸缩水</summary>
+              <div class="issue-body">
+                <p><strong>原因：</strong>Nylon收缩率约1.5%，远高于PLA。</p>
+                <ul>
+                  <li>在切片或CAD中补偿1.5%尺寸</li>
+                  <li>打印后等完全冷却再测量</li>
+                </ul>
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resin -->
+      <div class="mat-card" id="resin">
+        <div class="mat-header" style="--color:#00bcd4">
+          <h3>Resin <small>光固化树脂（MSLA/DLP）</small></h3>
+          <span class="badge badge-medium">中级</span>
+        </div>
+        <p class="mat-desc">光固化打印（SLA/MSLA/DLP）精度极高（0.01 mm级），适合精细模型、首饰、牙科模型。需紫外后固化和防护措施。</p>
+        <div class="mat-tags">
+          <span class="tag">超高精度</span><span class="tag">细节丰富</span><span class="tag">需防护</span><span class="tag">后处理复杂</span>
+        </div>
+        <table class="param-table">
+          <thead><tr><th>参数</th><th>推荐范围</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td>层厚</td><td>0.03–0.1 mm</td><td>精细件0.05 mm，快速件0.1 mm</td></tr>
+            <tr><td>底层曝光时间</td><td>30–60 s</td><td>视FEP张力和平台粘性调整</td></tr>
+            <tr><td>普通层曝光</td><td>2–4 s</td><td>依光源功率/树脂品牌差异大</td></tr>
+            <tr><td>底层层数</td><td>4–8 层</td><td>-</td></tr>
+            <tr><td>抬升速度</td><td>40–80 mm/min</td><td>慢抬升减少撕裂</td></tr>
+            <tr><td>抬升高度</td><td>5–7 mm</td><td>-</td></tr>
+            <tr><td>打印温度</td><td>20–28 °C</td><td>低温树脂粘度升高，易失败</td></tr>
+          </tbody>
+        </table>
+        <div class="issues-section">
+          <h4>常见问题 & 解决方案</h4>
+          <div class="issue-list">
+            <details>
+              <summary>🔴 模型脱落 / 打印失败</summary>
+              <div class="issue-body">
+                <p><strong>原因：</strong>平台附着力不足，或底层曝光不足。</p>
+                <ul>
+                  <li>重新调平打印平台（纸张法）</li>
+                  <li>增加底层曝光时间至40–60s</li>
+                  <li>增加底层数量至6–8层</li>
+                  <li>打印前用IPA清洁平台</li>
+                  <li>室温低于20°C时加热树脂至25°C</li>
+                </ul>
+              </div>
+            </details>
+            <details>
+              <summary>🔴 树脂粘FEP膜 / 反复断层</summary>
+              <div class="issue-body">
+                <p><strong>原因：</strong>FEP膜老化、曝光过度、抬升速度太快。</p>
+                <ul>
+                  <li>减慢抬升速度</li>
+                  <li>检查FEP膜是否有划痕，及时更换</li>
+                  <li>减少曝光时间</li>
+                  <li>优化支撑摆放，减小单层面积</li>
+                </ul>
+              </div>
+            </details>
+            <details>
+              <summary>🟡 表面模糊 / 细节丢失</summary>
+              <div class="issue-body">
+                <ul>
+                  <li>减少曝光时间（过度固化导致溢胀）</li>
+                  <li>清洗工序：95%酒精浸泡1–2分钟后超声波清洗</li>
+                  <li>清洗后充分吹干再后固化</li>
+                </ul>
+              </div>
+            </details>
+            <details>
+              <summary>🔴 健康与安全警告</summary>
+              <div class="issue-body">
+                <p><strong>⚠️ 重要！</strong>未固化树脂含有毒单体，务必：</p>
+                <ul>
+                  <li>佩戴丁腈手套和护目镜</li>
+                  <li>在通风良好空间打印</li>
+                  <li>废液/废料不得直接倒入下水道，紫外固化后按固体垃圾处理</li>
+                  <li>避免树脂接触皮肤，接触后立即用肥皂水清洗</li>
+                </ul>
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+
+      <!-- ASA -->
+      <div class="mat-card" id="asa">
+        <div class="mat-header" style="--color:#795548">
+          <h3>ASA <small>丙烯腈苯乙烯丙烯酸酯</small></h3>
+          <span class="badge badge-hard">进阶</span>
+        </div>
+        <p class="mat-desc">ABS的户外升级版，抗UV老化，耐候性卓越，适合室外标牌、车载配件、园艺工具。打印特性与ABS类似。</p>
+        <div class="mat-tags">
+          <span class="tag">抗UV</span><span class="tag">户外耐候</span><span class="tag">高强度</span><span class="tag">需密闭腔</span>
+        </div>
+        <table class="param-table">
+          <thead><tr><th>参数</th><th>推荐范围</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td>喷嘴温度</td><td>240–260 °C</td><td>建议250°C起步</td></tr>
+            <tr><td>热床温度</td><td>90–110 °C</td><td>必须热床</td></tr>
+            <tr><td>打印速度</td><td>30–50 mm/s</td><td>慢速稳定优先</td></tr>
+            <tr><td>冷却风扇</td><td>0–10%</td><td>几乎关闭，防翘边</td></tr>
+            <tr><td>腔体温度</td><td>50–60 °C</td><td>密闭腔必要条件</td></tr>
+            <tr><td>层高</td><td>0.15–0.3 mm</td><td>-</td></tr>
+          </tbody>
+        </table>
+        <div class="issues-section">
+          <h4>常见问题 & 解决方案</h4>
+          <div class="issue-list">
+            <details>
+              <summary>🔴 翘边（同ABS同样严重）</summary>
+              <div class="issue-body">
+                <ul>
+                  <li>密闭腔体打印，维持腔内50°C+</li>
+                  <li>ASA丙酮浆涂床面</li>
+                  <li>关闭全部冷却风扇</li>
+                  <li>模型加Brim，边缘宽10 mm以上</li>
+                </ul>
+              </div>
+            </details>
+            <details>
+              <summary>🟡 气味问题</summary>
+              <div class="issue-body">
+                <p>ASA的VOC排放与ABS相当，务必通风或过滤。</p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- .material-grid -->
+  </div>
+</section>
+
+<!-- ===== PARAMS COMPARISON ===== -->
+<section class="section section-alt" id="params">
+  <div class="container">
+    <h2 class="section-title">参数快速对比</h2>
+    <p class="section-sub">一张表掌握各材料核心参数区间。</p>
+    <div class="table-wrapper">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>材料</th>
+            <th>喷嘴温度</th>
+            <th>热床温度</th>
+            <th>打印速度</th>
+            <th>冷却风扇</th>
+            <th>是否需密闭腔</th>
+            <th>干燥要求</th>
+            <th>难度</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="dot" style="background:#4caf50"></span>PLA</td>
+            <td>190–220°C</td>
+            <td>0–60°C</td>
+            <td>40–80 mm/s</td>
+            <td>100%</td>
+            <td>❌</td>
+            <td>可选</td>
+            <td class="diff-easy">★☆☆</td>
+          </tr>
+          <tr>
+            <td><span class="dot" style="background:#f44336"></span>ABS</td>
+            <td>230–250°C</td>
+            <td>90–110°C</td>
+            <td>30–60 mm/s</td>
+            <td>0–20%</td>
+            <td>✅ 强烈建议</td>
+            <td>建议</td>
+            <td class="diff-hard">★★★</td>
+          </tr>
+          <tr>
+            <td><span class="dot" style="background:#2196f3"></span>PETG</td>
+            <td>230–250°C</td>
+            <td>70–90°C</td>
+            <td>30–60 mm/s</td>
+            <td>30–50%</td>
+            <td>❌</td>
+            <td>建议</td>
+            <td class="diff-easy">★★☆</td>
+          </tr>
+          <tr>
+            <td><span class="dot" style="background:#ff9800"></span>TPU</td>
+            <td>220–235°C</td>
+            <td>30–60°C</td>
+            <td>15–30 mm/s</td>
+            <td>50–100%</td>
+            <td>❌</td>
+            <td>建议</td>
+            <td class="diff-medium">★★☆</td>
+          </tr>
+          <tr>
+            <td><span class="dot" style="background:#9c27b0"></span>Nylon</td>
+            <td>240–270°C</td>
+            <td>70–90°C</td>
+            <td>30–50 mm/s</td>
+            <td>0–20%</td>
+            <td>✅ 必须</td>
+            <td>✅ 必须</td>
+            <td class="diff-hard">★★★</td>
+          </tr>
+          <tr>
+            <td><span class="dot" style="background:#00bcd4"></span>Resin</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>通风必须</td>
+            <td>N/A</td>
+            <td class="diff-medium">★★☆</td>
+          </tr>
+          <tr>
+            <td><span class="dot" style="background:#795548"></span>ASA</td>
+            <td>240–260°C</td>
+            <td>90–110°C</td>
+            <td>30–50 mm/s</td>
+            <td>0–10%</td>
+            <td>✅ 强烈建议</td>
+            <td>建议</td>
+            <td class="diff-hard">★★★</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TROUBLESHOOT ===== -->
+<section class="section" id="troubleshoot">
+  <div class="container">
+    <h2 class="section-title">通用问题排查</h2>
+    <p class="section-sub">不论用哪种材料，这些问题最常见。</p>
+
+    <div class="trouble-grid">
+
+      <div class="trouble-card">
+        <div class="trouble-icon">🌡️</div>
+        <h3>温度塔校准</h3>
+        <p>每种新耗材必打温度塔（Temperature Tower）。从高到低打印5°C阶梯，观察：</p>
+        <ul>
+          <li>哪一层拉丝最少</li>
+          <li>哪一层层粘最好</li>
+          <li>哪一层桥接最干净</li>
+        </ul>
+        <p>取最佳折中温度作为默认值。</p>
+      </div>
+
+      <div class="trouble-card">
+        <div class="trouble-icon">📏</div>
+        <h3>挤出量校准（E-step）</h3>
+        <p>挤出误差导致过挤/欠挤，影响尺寸精度和表面质量：</p>
+        <ol>
+          <li>在耗材上标记100 mm处</li>
+          <li>命令挤出100 mm</li>
+          <li>实测挤出量，计算E-step修正值</li>
+          <li>更新固件E-step值</li>
+        </ol>
+      </div>
+
+      <div class="trouble-card">
+        <div class="trouble-icon">📐</div>
+        <h3>调平问题</h3>
+        <p>调平是打印成功的基础，症状：</p>
+        <ul>
+          <li>第一层不粘 → 床面太远</li>
+          <li>第一层被刮 → 床面太近</li>
+          <li>首层一侧好一侧差 → 床面倾斜</li>
+        </ul>
+        <p>推荐使用BLTouch/CR Touch等自动调平传感器，大幅减少手动操作。</p>
+      </div>
+
+      <div class="trouble-card">
+        <div class="trouble-icon">💧</div>
+        <h3>耗材干燥</h3>
+        <p>潮湿耗材的症状：打印时有噼啪声、表面气泡、拉丝严重、层粘差。</p>
+        <div class="dry-table-wrap">
+          <table class="mini-table">
+            <thead><tr><th>材料</th><th>温度</th><th>时间</th></tr></thead>
+            <tbody>
+              <tr><td>PLA</td><td>45–50°C</td><td>4–6h</td></tr>
+              <tr><td>PETG</td><td>65°C</td><td>6–8h</td></tr>
+              <tr><td>ABS/ASA</td><td>80°C</td><td>4–6h</td></tr>
+              <tr><td>TPU</td><td>50°C</td><td>4–6h</td></tr>
+              <tr><td>Nylon</td><td>80°C</td><td>8–12h</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:0.85rem;margin-top:0.5rem;">💡 食品脱水机 / 烤箱 / 专用耗材烘干箱均可使用。</p>
+      </div>
+
+      <div class="trouble-card">
+        <div class="trouble-icon">🔧</div>
+        <h3>喷嘴堵塞处理</h3>
+        <ol>
+          <li><strong>冷拔法：</strong>加热至打印温度，手动推入少量料，冷却至90°C（PLA）快速拔出，带出积碳。</li>
+          <li><strong>针清法：</strong>加热喷嘴，用0.4 mm清洁针反复戳入喷嘴孔。</li>
+          <li><strong>更换喷嘴：</strong>黄铜喷嘴建议每300–500小时更换，碳素纤维/金属耗材建议用硬化钢喷嘴。</li>
+        </ol>
+      </div>
+
+      <div class="trouble-card">
+        <div class="trouble-icon">🪨</div>
+        <h3>支撑设置优化</h3>
+        <ul>
+          <li>悬空角度超过45°才加支撑</li>
+          <li>支撑间距设为2–3 mm，取件容易</li>
+          <li>使用树状支撑（Tree Support）减少接触面</li>
+          <li>支撑Z距离设为层高的1–2倍</li>
+          <li>可溶性支撑（PVA/BVOH）用于双挤出，最干净</li>
+        </ul>
+      </div>
+
+      <div class="trouble-card">
+        <div class="trouble-icon">🐘</div>
+        <h3>大象脚（Elephant Foot）</h3>
+        <p>底层被过度压扁导致底部外扩，原因：</p>
+        <ul>
+          <li>调平时喷嘴离床面太近</li>
+          <li>热床温度过高软化底层</li>
+          <li>首层线宽过大</li>
+        </ul>
+        <p><strong>修复：</strong>切片中设置"Elephant Foot Compensation"值（0.1–0.2 mm），或调高首层高度。</p>
+      </div>
+
+      <div class="trouble-card">
+        <div class="trouble-icon">🌀</div>
+        <h3>鬼影 / 振纹（Ringing）</h3>
+        <p>模型边缘出现波浪纹，在边角处尤明显。</p>
+        <ul>
+          <li>降低打印速度</li>
+          <li>增大加速度阻尼（降低Jerk/Acceleration值）</li>
+          <li>Klipper用户启用Input Shaper（ADXL345加速度计校准）</li>
+          <li>检查各轴皮带张力，确保均匀紧绷</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== TIPS ===== -->
+<section class="section section-alt" id="tips">
+  <div class="container">
+    <h2 class="section-title">实用技巧 & 进阶建议</h2>
+    <div class="tips-grid">
+
+      <div class="tip-card">
+        <span class="tip-num">01</span>
+        <h4>首件必打校准件</h4>
+        <p>换新料先打20mm校准方块（XYZ Cube），检查尺寸偏差、层纹、填充质量，确认参数再打正式模型。</p>
+      </div>
+      <div class="tip-card">
+        <span class="tip-num">02</span>
+        <h4>善用切片软件的"逐步预览"</h4>
+        <p>打印前在切片软件逐层检查支撑位置、薄壁数量、桥接情况，发现问题比打印到一半发现省钱多了。</p>
+      </div>
+      <div class="tip-card">
+        <span class="tip-num">03</span>
+        <h4>建立个人参数配置库</h4>
+        <p>每种品牌/颜色的耗材单独建一套切片配置，记录最优参数和踩坑备注，下次换料直接调用。</p>
+      </div>
+      <div class="tip-card">
+        <span class="tip-num">04</span>
+        <h4>用"Pressure Advance"改善角落</h4>
+        <p>Klipper / Marlin的Pressure Advance（或Linear Advance）功能可大幅减少角落过挤和直线欠挤，让轮廓更锐利。</p>
+      </div>
+      <div class="tip-card">
+        <span class="tip-num">05</span>
+        <h4>打印床选择</h4>
+        <p>PEI弹簧钢板是最通用的选择，绝大多数耗材常温可粘，热床65°C以上可自然脱落。建议入手双面（粗面+光面）各一张。</p>
+      </div>
+      <div class="tip-card">
+        <span class="tip-num">06</span>
+        <h4>设计时留配合公差</h4>
+        <p>FDM打印精度约±0.2 mm，配合孔比设计值大0.2–0.3 mm，轴比设计值小0.2 mm，避免打出来装不上或太松。</p>
+      </div>
+      <div class="tip-card">
+        <span class="tip-num">07</span>
+        <h4>利用耗材透明特性</h4>
+        <p>PETG/PC等透明料打印时降低填充、增大层厚、提升温度并关冷却，可获得接近玻璃的透明效果。</p>
+      </div>
+      <div class="tip-card">
+        <span class="tip-num">08</span>
+        <h4>日志与失败记录</h4>
+        <p>保留每次打印的切片文件、照片和参数记录。失败案例是最好的学习材料，方便快速复现排查。</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <p>🖨️ <strong>3D打印材料指南</strong> — 为所有3D打印爱好者整理</p>
+    <p class="footer-note">本指南提供参考区间，实际参数因打印机型号、品牌耗材、环境温湿度而异，建议结合校准件实测。</p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
